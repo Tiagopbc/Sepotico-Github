@@ -1,0 +1,91 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <SoftwareSerial.h>
+
+#define ende 0x3F
+#define col 2
+#define lin 2
+#define magPin 8
+
+
+
+
+
+
+LiquidCrystal_I2C lcd(ende,col,lin);
+long int tempoAbertura;
+SoftwareSerial bt(9,10);
+
+int senhaCorreta = 0;
+
+
+void setup() {
+ pinMode(magPin, INPUT_PULLUP);
+ pinMode(12, OUTPUT);
+ lcd.init();
+ lcd.backlight();
+ lcd.clear();
+ bt.begin(9600);
+ Serial.begin(9600);
+ digitalWrite(12,LOW);
+ bt.println("Ola mundo");
+}
+
+void loop() {
+ lcd.clear();
+ String senha;
+ lcd.setCursor(0,0);
+ lcd.print("PORTA FECHADA");
+ if (digitalRead(magPin)) {
+   lcd.clear();
+   bt.println("Porta aberta.");
+   lcd.setCursor(0,0);
+   lcd.print("PORTA ABERTA");
+   tempoAbertura = millis();
+   digitalWrite(12, HIGH);
+   int x = 0;
+   senha = "";
+   Serial.println(millis() - tempoAbertura);
+   while (millis()-tempoAbertura < 30000){
+     
+     digitalWrite(12, HIGH);
+     
+     if (bt.available() > 0){
+      senha = bt.readString();
+      Serial.println(senha);
+      if (senha == "123") {
+        Serial.println("break");
+        lcd.clear();
+        lcd.print("Bem vindo ");
+        lcd.setCursor(0,1);
+        lcd.print("de volta :)");
+        digitalWrite(12, LOW);
+        senhaCorreta = 1;
+        delay(50000);
+       
+        break;
+      }
+     }  
+   }
+     //verificar se chegou a senha do usuario, após o tempo (led acesa é para digitar a senha, caso passe o tempo a led comeca a piscar (visual))
+     // se verificar senha apaga a led
+
+
+   if (senhaCorreta == 0) {
+    long int tempo = millis();
+    lcd.clear();
+    lcd.print("Casa invadida :(");
+    while (millis() - tempo < 5000) {
+      digitalWrite(12, LOW);
+      delay(500);
+      digitalWrite(12,HIGH);
+      delay(500);
+    }
+   }
+
+
+   
+    // se sair do while quer dizer que nao digitou a senha ai led fica piscando**
+ }
+ delay(1000);
+}

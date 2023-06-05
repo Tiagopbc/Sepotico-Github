@@ -45,7 +45,7 @@ void loop() {
         int x = 0;
         senha = "";
         Serial.println(millis() - tempoAbertura);
-    while (millis()-tempoAbertura < 30000){  // 30 segundos para colocar a senha
+    while (millis()-tempoAbertura < 30000){  // 30 segundos para colocar a senha.
      
         digitalWrite(12, HIGH);
      

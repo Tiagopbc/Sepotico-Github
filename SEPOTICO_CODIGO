@@ -7,17 +7,9 @@
 #define lin 2
 #define magPin 8
 
-
-
-
-
-
 LiquidCrystal_I2C lcd(ende,col,lin);
 long int tempoAbertura;
 SoftwareSerial bt(9,10);
-
-
-
 
 void setup() {
     pinMode(magPin, INPUT_PULLUP);
@@ -45,7 +37,7 @@ void loop() {
         int x = 0;
         senha = "";
         Serial.println(millis() - tempoAbertura);
-    while (millis()-tempoAbertura < 30000){  // 30 segundos para colocar a senha.
+    while (millis()-tempoAbertura < 30000){  // 30 segundos para colocar a senha
      
         digitalWrite(12, HIGH);
      
@@ -66,9 +58,6 @@ void loop() {
         }  
     }
      
-     
-
-
     if (senhaCorreta == 0) {   // se sair do while com 'senhaCorreta = 0' quer dizer que nao digitou a senha ai led fica piscando**
         long int tempo = millis();
         lcd.clear();
@@ -81,9 +70,6 @@ void loop() {
         }
     }
 
-
-   
-  
     }
  delay(1000);
  digitalWrite(12, LOW);
